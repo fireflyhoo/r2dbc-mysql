@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2018-2019 the original author or authors.
+  ~ Copyright 2018-2020 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,28 +19,62 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.mirromutth</groupId>
+    <groupId>dev.miku</groupId>
     <artifactId>r2dbc-mysql</artifactId>
-    <version>0.1.0.BUILD-SNAPSHOT</version>
+    <version>0.8.2.BUILD-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Reactive Relational Database Connectivity - MySQL</name>
     <url>https://github.com/mirromutth/r2dbc-mysql</url>
+    <description>R2DBC MySQL Implementation</description>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>mirromutth</id>
+            <name>Mirro Mutth</name>
+            <email>mirromutth(at)gmail.com</email>
+            <url>https://miku.dev</url>
+            <roles>
+                <role>R2DBC MySQL Owner</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <inceptionYear>2018</inceptionYear>
+    <scm>
+        <connection>scm:git:git://github.com/mirromutth/r2dbc-mysql.git</connection>
+        <developerConnection>scm:git:ssh://github.com:mirromutth/r2dbc-mysql.git</developerConnection>
+        <url>https://github.com/mirromutth/r2dbc-mysql</url>
+    </scm>
 
     <properties>
-        <assertj.version>3.12.0</assertj.version>
+        <assertj.version>3.15.0</assertj.version>
         <java.version>1.8</java.version>
+        <mbr.version>0.2.0.RELEASE</mbr.version>
+        <jmh.version>1.23</jmh.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <junit.version>5.4.2</junit.version>
+        <junit.version>5.6.0</junit.version>
         <logback.version>1.2.3</logback.version>
-        <mockito.version>2.27.0</mockito.version>
-        <mysql.version>8.0.16</mysql.version>
+        <mockito.version>3.2.4</mockito.version>
+        <mysql.version>8.0.19</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <r2dbc-spi.version>0.8.0.M8</r2dbc-spi.version>
-        <reactor.version>Dysprosium-M1</reactor.version>
-        <slf4j.version>1.7.26</slf4j.version>
-        <testcontainers.version>1.11.2</testcontainers.version>
+        <r2dbc-spi.version>0.8.1.RELEASE</r2dbc-spi.version>
+        <reactor.version>Dysprosium-SR4</reactor.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <testcontainers.version>1.12.5</testcontainers.version>
+        <hikari-cp.version>3.4.2</hikari-cp.version>
+        <spring-framework.version>5.2.3.RELEASE</spring-framework.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <maven.surefire.skip>false</maven.surefire.skip>
     </properties>
 
     <dependencyManagement>
@@ -146,6 +180,18 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikari-cp.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-framework.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
             <scope>test</scope>
@@ -157,7 +203,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <compilerArgs>
                         <arg>-Werror</arg>
@@ -173,16 +219,29 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.1</version>
                 <configuration>
                     <excludePackageNames>
-                        io.github.mirromutth.r2dbc.mysql.security,io.github.mirromutth.r2dbc.mysql.client,io.github.mirromutth.r2dbc.mysql.internal,io.github.mirromutth.r2dbc.mysql.codec,io.github.mirromutth.r2dbc.mysql.message,io.github.mirromutth.r2dbc.mysql.util
+                        dev.miku.r2dbc.mysql.authentication,dev.miku.r2dbc.mysql.client,dev.miku.r2dbc.mysql.util,dev.miku.r2dbc.mysql.codec,dev.miku.r2dbc.mysql.message
                     </excludePackageNames>
                     <links>
                         <link>https://projectreactor.io/docs/core/release/api/</link>
@@ -201,7 +260,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -213,13 +272,50 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.2</version>
                 <configuration>
                     <runOrder>random</runOrder>
                     <includes>
-                        <include>**/*Example.java</include>
                         <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*TestKit.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                    <skip>${maven.surefire.skip}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <runOrder>random</runOrder>
+                    <includes>
+                        <include>**/*TestKit.java</include>
+                        <include>**/*IntegrationTest.java</include>
                     </includes>
                 </configuration>
             </plugin>
@@ -237,6 +333,17 @@
             </resource>
         </resources>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -259,19 +366,92 @@
 
     <profiles>
         <profile>
-            <id>r2dbc-spi-artifactory</id>
-            <activation>
-                <property>
-                    <name>r2dbcSpiArtifactory</name>
-                </property>
-            </activation>
+            <id>jmh</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.github.mp911de.microbenchmark-runner</groupId>
+                    <artifactId>microbenchmark-runner-junit5</artifactId>
+                    <version>${mbr.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-core</artifactId>
+                    <version>${jmh.version}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-generator-annprocess</artifactId>
+                    <version>${jmh.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/jmh/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>run-benchmarks</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <classpathScope>test</classpathScope>
+                                    <executable>java</executable>
+                                    <arguments>
+                                        <argument>-classpath</argument>
+                                        <classpath/>
+                                        <argument>org.openjdk.jmh.Main</argument>
+                                        <argument>.*</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <repositories>
                 <repository>
-                    <id>r2dbc-spi-artifactory</id>
-                    <url>${r2dbcSpiArtifactory}</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
+                    <id>jitpack.io</id>
+                    <url>https://jitpack.io</url>
                 </repository>
             </repositories>
         </profile>
